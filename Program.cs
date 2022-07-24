@@ -21,7 +21,7 @@ namespace ArteMiner
             Welcome();
 
             Logger.LogMessage("Main", "Please insert amount of threads (insert the amount of cores your CPU has for optimal performance).");
-            Console.Write("Threads >");
+            Console.Write("Threads > ");
             string input = Console.ReadLine();
             int amount = 0;
             bool valid = int.TryParse(input, NumberStyles.Integer, System.Globalization.NumberFormatInfo.CurrentInfo, out amount);
@@ -59,8 +59,8 @@ namespace ArteMiner
 
             }).Start();
 
-            Logger.LogMessage("Main", "Starting mining on 4 threads.");
-            MinerJobManager.CreateJobs(750000000, 4);
+            Logger.LogMessage("Main", "Starting mining on " + amount + " threads.");
+            MinerJobManager.CreateJobs(3000000000 / amount, amount); // 750000000
 
             while(running)
             {

@@ -1,0 +1,15 @@
+E:\projects\csharp\arteMiner\bin\Debug\net6.0\arteMiner.exe
+E:\projects\csharp\arteMiner\bin\Debug\net6.0\arteMiner.deps.json
+E:\projects\csharp\arteMiner\bin\Debug\net6.0\arteMiner.runtimeconfig.json
+E:\projects\csharp\arteMiner\bin\Debug\net6.0\arteMiner.dll
+E:\projects\csharp\arteMiner\bin\Debug\net6.0\ref\arteMiner.dll
+E:\projects\csharp\arteMiner\bin\Debug\net6.0\arteMiner.pdb
+E:\projects\csharp\arteMiner\obj\Debug\net6.0\arteMiner.csproj.AssemblyReference.cache
+E:\projects\csharp\arteMiner\obj\Debug\net6.0\arteMiner.GeneratedMSBuildEditorConfig.editorconfig
+E:\projects\csharp\arteMiner\obj\Debug\net6.0\arteMiner.AssemblyInfoInputs.cache
+E:\projects\csharp\arteMiner\obj\Debug\net6.0\arteMiner.AssemblyInfo.cs
+E:\projects\csharp\arteMiner\obj\Debug\net6.0\arteMiner.csproj.CoreCompileInputs.cache
+E:\projects\csharp\arteMiner\obj\Debug\net6.0\arteMiner.dll
+E:\projects\csharp\arteMiner\obj\Debug\net6.0\ref\arteMiner.dll
+E:\projects\csharp\arteMiner\obj\Debug\net6.0\arteMiner.pdb
+E:\projects\csharp\arteMiner\obj\Debug\net6.0\arteMiner.genruntimeconfig.cache
