@@ -30,6 +30,15 @@ namespace ArteMiner
                 Logger.LogMessage("Main", input + " is not a valid Integer");
                 Environment.Exit(1);
             }
+            Console.Write("Multiplier > ");
+            string input2 = Console.ReadLine();
+            int amount2 = 0;
+            valid = int.TryParse(input2, NumberStyles.Integer, System.Globalization.NumberFormatInfo.CurrentInfo, out amount2);
+            if(!valid)
+            {
+                Logger.LogMessage("Main", input2 + " is not a valid Integer");
+                Environment.Exit(1);
+            }
 
             Logger.LogMessage("Main", "Starting timer.");
 
@@ -60,20 +69,18 @@ namespace ArteMiner
             }).Start();
 
             Logger.LogMessage("Main", "Starting mining on " + amount + " threads.");
-            MinerJobManager.CreateJobs(3000000000 / amount, amount); // 750000000
+            MinerJobManager.CreateJobs(3000000000 / amount, amount, amount2); // 750000000
 
             while(running)
             {
                 Thread.Sleep(10000);
             
-                int count = 0;
+                int count = MinerJobManager.runningJobs;
                 float added = 0;
                 float avg = 0;
 
                 foreach(MinerJob job in MinerJobManager.jobs)
                 {
-                    count++;
-
                     added += job.hashes;
                     job.hashes = 0;
                 }
@@ -111,7 +118,7 @@ namespace ArteMiner
                     hashrate = Math.Round(hrate, 4) + " H/S";
                 }
 
-                Logger.LogMessage("Main", "Average hashrate: " + hashrate + " Total hashes: " + added + " Threads: " + count);
+                Logger.LogMessage("Main", "Average hashrate: " + hashrate + " Total hashes: " + added + " Threads: " + count + " Running Threads: " + MinerJobManager.runningJobs);
             }
         }
 
@@ -209,19 +216,25 @@ namespace ArteMiner
 
         public static Dictionary<string,Thread> threads = new Dictionary<string, Thread>();
         public static List<MinerJob> jobs = new List<MinerJob>();
+        public static int runningJobs = 0;
 
-        public static void CreateJobs(Int64 batchSize, int jobCount)
+        public static void CreateJobs(Int64 batchSize, int jobCount, int multiplier=10)
         {
             Logger.LogMessage("JobManager", "Total maximum nonce: " + batchSize * jobCount);
 
             int i = 0;
-            for(i = 0; i < jobCount; i++)
+            int count = 0;
+            for(i = 0; i < jobCount*multiplier; i++)
             {
-                Int64 start = i * batchSize;
+                Int64 start = i * batchSize/multiplier;
 
-                Logger.LogMessage("JobManager", "Starting job with nonce: " + start.ToString());
-                StartJob(batchSize, start);
+                //Logger.LogMessage("JobManager", "Starting job with nonce: " + start.ToString());
+                StartPooledJob(batchSize/multiplier, start, i, jobCount);
+                count++;
+                Thread.Sleep(10);
             }
+
+            Logger.LogMessage("JobManager", "Jobs started: " + count.ToString());
         }
 
         public static void Solved(byte[] hash, Int64 nonce)
@@ -272,6 +285,39 @@ namespace ArteMiner
             }
         }
 
+        public static void StartPooledJob(Int64 batchSize, Int64 nonce, int index, int max)
+        {
+            Thread t = new Thread(() => 
+            {
+                Thread.CurrentThread.IsBackground = false; 
+
+                MinerJob job = new MinerJob();
+
+                job.batchSize = batchSize;
+                job.startNonce = nonce;
+
+                jobs.Add(job);
+
+                if(runningJobs < max)
+                    job.Start();
+                else {
+                    while (true) {
+                        if(runningJobs < max) {
+                            job.Start();
+                            break;
+                        }
+                        else
+                            Thread.Sleep(1000);
+                    }
+                }
+
+            });
+
+            threads.Add(nonce.ToString(), t);
+
+            t.Start();
+        }
+
         public static void StartJob(Int64 batchSize, Int64 nonce)
         {
             Thread t = new Thread(() => 
@@ -318,7 +364,9 @@ namespace ArteMiner
 
         public void Start()
         {
+            MinerJobManager.runningJobs += 1;
             canCompute = true;
+            Logger.LogMessage($"Thread {startNonce}", "Started");
             Compute();
         }
 
@@ -368,9 +416,13 @@ namespace ArteMiner
                     AnnounceSolution(currentHash);
                 else
                     nonce++;
+
+                // if(nonce % 1000000 == 0)
+                    // Logger.LogMessage($"Thread {startNonce}", nonce + " / " + batchSize);
             }
 
-            //Console.WriteLine("Finished");
+            Logger.LogMessage($"Thread {startNonce}", "Finished");
+            MinerJobManager.runningJobs -= 1;
         }
 
     }

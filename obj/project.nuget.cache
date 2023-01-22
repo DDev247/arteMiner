@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Ja8QJIVS9veGLZY6Y1QEigirhXNLnUXvvJ9ZKBQGU8PnbhHCh9RhmlisUSSdySmyn1hDkZ+d+QxH57D6juPxzA==",
+  "dgSpecHash": "d9UCZMBMU+31zJuiXWNAI7ro/9g8engx+af6reEKPvMIjAWy0z+WbmVQWSmfZQ/yHxIjVmBezaZzEvCh2b2KKw==",
   "success": true,
-  "projectFilePath": "E:\\projects\\csharp\\arteMiner\\arteMiner.csproj",
+  "projectFilePath": "/home/ddev/Documents/projects/miner2/arteMiner/arteMiner.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }
